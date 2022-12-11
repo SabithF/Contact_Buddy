@@ -1,4 +1,5 @@
 import 'package:contact_app/DB/repo.dart';
+import 'dart:async';
 
 import 'package:contact_app/models/AddUser.dart';
 
@@ -17,5 +18,14 @@ class UserService {
   // read users
   readAllUsers() async {
     return await _repository.readData('users');
+  }
+
+  //Edit User
+  UpdateUser(User user) async {
+    return await _repository.updateData('users', user.userMap());
+  }
+
+  deleteUser(userId) async {
+    return await _repository.deleteDataById('users', userId);
   }
 }

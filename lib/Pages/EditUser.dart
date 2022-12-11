@@ -1,18 +1,18 @@
-// ignore_for_file: prefer_const_constructors
+import 'package:flutter/cupertino.dart';
 
-import 'package:contact_app/Services/services.dart';
-import 'package:contact_app/models/AddUser.dart';
+import '../models/AddUser.dart';
+import '../Services/services.dart';
 import 'package:flutter/material.dart';
 
-class AddNewUser extends StatefulWidget {
-  const AddNewUser({Key? key}) : super(key: key);
+class EditUser extends StatefulWidget {
+  final User user;
+  const EditUser({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<AddNewUser> createState() => _AddNewUserState();
+  State<EditUser> createState() => _EditUserState();
 }
 
-class _AddNewUserState extends State<AddNewUser> {
-  // Creating controllers
+class _EditUserState extends State<EditUser> {
   var _userFNameCont = TextEditingController();
   var _userSNameCont = TextEditingController();
   var _userCnumberCont = TextEditingController();
@@ -23,14 +23,23 @@ class _AddNewUserState extends State<AddNewUser> {
   bool _validateFN = false;
   bool _validateLN = false;
   bool _validateCN = false;
+  var _userService = UserService();
 
-  var _userServices = UserService();
+  @override
+  void initstate() {
+    setState(() {
+      _userFNameCont.text = widget.user.fname ?? '';
+      _userSNameCont.text = widget.user.lname ?? '';
+      _userCnumberCont.text = widget.user.contact ?? '';
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Create contact"),
+        title: const Text("Edit contact"),
       ),
       body: SingleChildScrollView(
           // creating the form
@@ -44,7 +53,7 @@ class _AddNewUserState extends State<AddNewUser> {
           children: [
             // header
             const Text(
-              'Add new contact',
+              'Edit contact',
               style: TextStyle(
                   fontSize: 15,
                   color: Colors.orange,
@@ -153,15 +162,16 @@ class _AddNewUserState extends State<AddNewUser> {
                             // storing the data
                             //creating a object to access the model
                             var _user = User();
+                            _user.id = widget.user.id;
                             _user.fname = _userFNameCont.text;
                             _user.lname = _userSNameCont.text;
                             _user.contact = _userCnumberCont.text;
-                            var result = await _userServices.SaveUser(_user);
+                            var result = await _userService.UpdateUser(_user);
                             Navigator.pop(context, result);
                             // print(result);
                           }
                         },
-                        child: const Text('Save'))
+                        child: const Text('Update'))
                 // ],
                 ),
             SizedBox(
